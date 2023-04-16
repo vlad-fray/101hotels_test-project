@@ -35,12 +35,22 @@
                 </button>
             </div>
 
+            <date-picker 
+                v-model="filterDateRange" 
+                range 
+                placeholder="Filter by publish date"
+            ></date-picker>
+
             <add-comment-form @add-new-comment="createNewComment" />
         </div>
 
         <comments-list :comments="currentPageComments" @delete-comment="deleteComment" />
 
-        <pagination-list :pages-count="pagesCount" @set-page="(page) => currentPage = page" />
+        <pagination-list 
+            :current-page="currentPage"
+            :pages-count="pagesCount" 
+            @set-page="(page) => currentPage = page" 
+        />
     </div>
 </template>
 
@@ -50,6 +60,8 @@ import { API } from '../api';
 import AddCommentForm from './AddCommentForm.vue';
 import CommentsList from './CommentsList.vue';
 import PaginationList from './PaginationList.vue';
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
 
 const PAGE_SIZE = 3;
 
@@ -58,6 +70,7 @@ export default {
         CommentsList,
         AddCommentForm,
         PaginationList,
+        DatePicker,
     },
     data() {
         return {
@@ -76,25 +89,36 @@ export default {
             comments: [],
             sort: null,
             currentPage: 1,
+            filterDateRange: [],
         };
     },
     computed: {
+        filteredComments() {
+            if (this.filterDateRange[0] && this.filterDateRange[1]) {
+                return this.comments.filter((comment) => {
+                    return new Date(comment.date).getTime() < this.filterDateRange[1].getTime()
+                        && new Date(comment.date).getTime() > this.filterDateRange[0].getTime();
+                })
+            }
+            
+            return this.comments;
+        },
         sortedComments() {
             if (this.sort?.type === this.SORTS_TYPES.BY_ID) {
-                return [...this.comments].sort((comA, comB) => this.sort.value === this.SORTS_BY_ID.ASC 
+                return [...this.filteredComments].sort((comA, comB) => this.sort.value === this.SORTS_BY_ID.ASC 
                     ? comA.id - comB.id
                     : comB.id - comA.id
                 );
             }
 
             if (this.sort?.type === this.SORTS_TYPES.BY_DATE) {
-                return [...this.comments].sort((comA, comB) => this.sort.value === this.SORTS_BY_DATE.ASC 
+                return [...this.filteredComments].sort((comA, comB) => this.sort.value === this.SORTS_BY_DATE.ASC 
                     ? new Date(comA.date).getTime() - new Date(comB.date).getTime()
                     : new Date(comB.date).getTime() - new Date(comA.date).getTime()
                 );
             }
 
-            return this.comments;
+            return this.filteredComments;
         },
         currentPageComments() {
             return this.sortedComments
@@ -190,6 +214,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 16px;
     margin-bottom: 16px;
 }
 
@@ -199,6 +224,7 @@ export default {
 }
 
 .sorts__description {
+    margin: 0;
     margin-right: 16px;
 }
 
@@ -230,7 +256,7 @@ export default {
     transform: rotate(135deg);
 }
 
-@container comments-wrapper (max-width: 800px) {
+@container comments-wrapper (max-width: 1024px) {
     .comments-actions {
         flex-direction: column;
     }

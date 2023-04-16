@@ -23,12 +23,14 @@
             <span>{{ comment.text }}</span>
             <span>{{ comment.date }}</span>
         </li>
+
+        <p v-if="!formattedComments.length">
+            No matches found
+        </p>
     </ul>
 </template>
 
 <script>
-import { API } from "../api";
-
 export default {
     props: {
         comments: {
@@ -58,17 +60,19 @@ export default {
 
 <style scoped>
 .comments {
+    container-type: inline-size;
+    container-name: comments;
     margin: 0;
     padding: 0;
 }
 
 .comment {
     display: grid;
-    grid-template-columns: 48px 1fr 90px;
+    grid-template-columns: 48px 1fr 150px;
 }
 
 .comment_header {
-    margin-bottom: 8px;
+    margin-bottom: 16px;
     padding-bottom: 8px;
     border-bottom: 1px solid #000000;
 }
@@ -119,5 +123,11 @@ export default {
 
 .comment span {
     word-break: break-word;
+}
+
+@container comments (max-width: 600px) {
+    .comment {
+        grid-template-columns: 48px 1fr 90px;
+    }
 }
 </style>
