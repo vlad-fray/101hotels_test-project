@@ -27,16 +27,23 @@
         <p v-if="!formattedComments.length">
             No matches found
         </p>
+
+        <add-comment-form @add-new-comment="(newComment) => $emit('add-new-comment', newComment)" />
     </ul>
 </template>
 
 <script>
+import AddCommentForm from './AddCommentForm.vue';
+
 export default {
     props: {
         comments: {
             type: Array,
             required: true,
         },
+    },
+    components: {
+        AddCommentForm,
     },
     computed: {
         formattedComments() {
@@ -79,9 +86,6 @@ export default {
 
 .comment_item {
     gap: 16px;
-}
-
-.comment_item:not(:last-of-type) {
     margin-bottom: 16px;
 }
 

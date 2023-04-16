@@ -40,11 +40,13 @@
                 range 
                 placeholder="Filter by publish date"
             ></date-picker>
-
-            <add-comment-form @add-new-comment="createNewComment" />
         </div>
 
-        <comments-list :comments="currentPageComments" @delete-comment="deleteComment" />
+        <comments-list 
+            :comments="currentPageComments" 
+            @delete-comment="deleteComment" 
+            @add-new-comment="createNewComment"
+        />
 
         <pagination-list 
             :current-page="currentPage"
@@ -57,7 +59,7 @@
 <script>
 import { API } from '../api';
 
-import AddCommentForm from './AddCommentForm.vue';
+
 import CommentsList from './CommentsList.vue';
 import PaginationList from './PaginationList.vue';
 import DatePicker from 'vue2-datepicker';
@@ -68,7 +70,6 @@ const PAGE_SIZE = 3;
 export default {
     components: {
         CommentsList,
-        AddCommentForm,
         PaginationList,
         DatePicker,
     },
@@ -256,7 +257,7 @@ export default {
     transform: rotate(135deg);
 }
 
-@container comments-wrapper (max-width: 1024px) {
+@container comments-wrapper (max-width: 768px) {
     .comments-actions {
         flex-direction: column;
     }
