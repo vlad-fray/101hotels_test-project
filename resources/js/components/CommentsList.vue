@@ -15,7 +15,7 @@
                 <button
                     type="button"
                     class="comment__delete"
-                    @click="$emit('delete-comment', comment.id)"
+                    @click="deleteCommentById(comment.id)"
                 ></button>
 
                 <span>{{ comment.id }}</span>
@@ -28,12 +28,14 @@
             No matches found
         </p>
 
-        <add-comment-form @add-new-comment="(newComment) => $emit('add-new-comment', newComment)" />
+        <add-comment-form @add-new-comment="createNewComment" />
     </ul>
 </template>
 
 <script>
 import AddCommentForm from './AddCommentForm.vue';
+
+import { mapActions } from 'vuex';
 
 export default {
     props: {
@@ -62,6 +64,12 @@ export default {
             });
         },
     },
+    methods: {
+        ...mapActions({
+            createNewComment: 'comments/createNewComment',
+            deleteCommentById: 'comments/deleteCommentById',
+        }),
+    }
 };
 </script>
 

@@ -7,7 +7,7 @@
                 <button 
                     type="button" 
                     class="sorts__toggle-by" 
-                    @click="changeSort(SORTS_TYPES.BY_ID)"
+                    @click="updateSortById"
                 >
                     <span>id</span>
                     <span
@@ -22,7 +22,7 @@
                 <button
                     type="button" 
                     class="sorts__toggle-by"
-                    @click="changeSort(SORTS_TYPES.BY_DATE)"
+                    @click="updateSortByDate"
                 >
                     <span>date published</span>
                     <span
@@ -42,11 +42,7 @@
             ></date-picker>
         </div>
 
-        <comments-list 
-            :comments="currentPageComments" 
-            @delete-comment="deleteComment" 
-            @add-new-comment="createNewComment"
-        />
+        <comments-list :comments="currentPageComments" />
 
         <pagination-list 
             :current-page="currentPage"
@@ -57,8 +53,7 @@
 </template>
 
 <script>
-import { API } from '../api';
-
+import { mapState, mapActions } from 'vuex';
 
 import CommentsList from './CommentsList.vue';
 import PaginationList from './PaginationList.vue';
@@ -87,13 +82,15 @@ export default {
                 ASC: 'date_asc',
                 DESC: 'date_desc',
             },
-            comments: [],
             sort: null,
             currentPage: 1,
             filterDateRange: [],
         };
     },
     computed: {
+        ...mapState({
+            comments: (state) => state.comments.comments,
+        }),
         filteredComments() {
             if (this.filterDateRange[0] && this.filterDateRange[1]) {
                 return this.comments.filter((comment) => {
@@ -133,50 +130,9 @@ export default {
         this.getAllComments();
     },
     methods: {
-        async getAllComments() {
-            const comments = await API.getAllComments();
-
-            if (comments) {
-                return this.comments = [...comments];
-            }
-
-            this.comments = [];
-        },
-        async createNewComment(newComment) {
-            const trimmedComment = newComment.trim();
-
-            if (!trimmedComment) return;
-
-            const success = await API.createComment({
-                name: 'Vladislav',
-                text: trimmedComment, 
-                date: String(new Date()),
-            });
-
-            if (success) {
-                this.getAllComments();
-            }
-        },
-        async deleteComment(id) {
-            const success = await API.deleteCommentById(id);
-
-            if (!success) return;
-            
-            await this.getAllComments();
-
-            if (this.currentPage > this.pagesCount) {
-                this.currentPage = this.pagesCount;
-            } 
-        },
-        changeSort(type) {
-            if (type === this.SORTS_TYPES.BY_ID) {
-                this.updateSortById();
-            }
-
-            if (type === this.SORTS_TYPES.BY_DATE) {
-                this.updateSortByDate();
-            }
-        },
+        ...mapActions({
+            getAllComments: 'comments/getAllComments',
+        }),
         updateSortById() {
             const SORTS_BY_ID = [null, this.SORTS_BY_ID.ASC, this.SORTS_BY_ID.DESC];
     
@@ -200,6 +156,13 @@ export default {
             } else {
                 this.sort = { type: this.SORTS_TYPES.BY_DATE, value: SORTS_BY_DATE[1] };
             }
+        },
+    },
+    watch: {
+        pagesCount(newVal) {
+            if (this.currentPage > newVal) {
+                this.currentPage = newVal;
+            } 
         },
     },
 };
