@@ -28,7 +28,7 @@
             No matches found
         </p>
 
-        <add-comment-form @add-new-comment="createNewComment" />
+        <add-comment-form />
     </ul>
 </template>
 
@@ -66,7 +66,6 @@ export default {
     },
     methods: {
         ...mapActions({
-            createNewComment: 'comments/createNewComment',
             deleteCommentById: 'comments/deleteCommentById',
         }),
     }

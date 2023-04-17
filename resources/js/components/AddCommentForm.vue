@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
     data() {
         return {
@@ -25,8 +27,11 @@ export default {
         }
     },
     methods: {
-        addComment() {
-            this.$emit('add-new-comment', this.newComment);
+        ...mapActions({
+            createNewComment: 'comments/createNewComment',
+        }),
+        async addComment() {
+            await this.createNewComment(this.newComment);
             this.newComment = '';
         },
     },
