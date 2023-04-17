@@ -1,22 +1,22 @@
 <template>
     <aside class="meme-wrapper">
-        <div
-            v-if="isMemeModalShown"
-            class="meme-modal"
-            @click="isMemeModalShown = false"
-        >
+        <backdrop-modal v-if="isMemeModalShown" @close-modal="isMemeModalShown = false" >
             <div class="meme-content">
                 <p v-html="memes[currentMemeIndex]"></p>
 
-                <button
-                    type="button"
-                    class="meme-button"
-                    @click.stop="currentMemeIndex += 1"
-                >
-                    Next
-                </button>
-            </div>   
-        </div>
+                <div class="meme-actions">
+                    <p>{{ currentMemeIndex + 1 }} / {{ memes.length }}</p>
+
+                    <button
+                        type="button"
+                        class="meme-button"
+                        @click.stop="showNextMeme"
+                    >
+                        Next
+                    </button>
+                </div>
+            </div>  
+        </backdrop-modal>
 
         <button
             type="button"
@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import BackdropModal from '../layouts/BackdropModal.vue';
+
 const memes = [
     'Как в Италии называют итальянцев со сломанной рукой? Люди с дефектом речи.',
     `Стоят на мосту Темзы два джентельмена и разговаривают. Тут в реке замечают
@@ -79,12 +81,20 @@ const memes = [
 ];
 
 export default {
+    components: { BackdropModal },
     data() {
         return {
             isMemeModalShown: false,
             currentMemeIndex: 0,
             memes: memes,
         };
+    },
+    methods: {
+        showNextMeme() {
+            this.currentMemeIndex = this.currentMemeIndex === this.memes.length -1 
+                ? 0
+                : this.currentMemeIndex + 1;
+        },
     },
 };
 </script>
@@ -109,6 +119,12 @@ export default {
     height: 100vh;
     width: 100vw;
     background-color: #00000011;
+}
+
+.meme-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .meme-button {
