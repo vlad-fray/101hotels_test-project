@@ -16,16 +16,8 @@ const actions = {
 
         commit('SET_COMMENTS', comments ?? []);
     },
-    async createNewComment({ dispatch }, newComment) {
-        const trimmedComment = newComment.trim();
-
-        if (!trimmedComment) return;
-
-        const success = await API.createComment({
-            name: 'Vladislav',
-            text: trimmedComment, 
-            date: String(new Date()),
-        });
+    async createNewComment({ dispatch }, payload) {
+        const success = await API.createComment(payload);
 
         if (success) {
             await dispatch('getAllComments');

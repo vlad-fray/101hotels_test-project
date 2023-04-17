@@ -1,5 +1,5 @@
 <template>
-    <div class="modal-wrapper">
+    <div class="modal-wrapper" @click.stop>
         <div
             v-if="currentComponent"
             class="backdrop-modal"
