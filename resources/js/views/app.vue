@@ -5,17 +5,20 @@
         </section>
         
         <meme-widget />
+        <backdrop-modal />
     </main>
 </template>
 
 <script>
 import CommentsWrapper from '../components/CommentsWrapper.vue';
 import MemeWidget from '../components/MemeWidget.vue';
+import BackdropModal from '../components/modals/BackdropModal.vue';
 
 export default {
     components: {
         MemeWidget,
         CommentsWrapper,
+        BackdropModal,
     },    
 };
 </script>

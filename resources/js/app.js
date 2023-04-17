@@ -1,6 +1,6 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
-import App from './views/app.vue'
+import App from './views/app.vue';
 
 import { store } from './store';
 

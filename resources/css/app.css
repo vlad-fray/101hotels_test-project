@@ -16,6 +16,49 @@ button {
   cursor: pointer;
 }
 
+.meme-button {
+  color: #ffffff;
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-primary);
+  border: none;
+  cursor: pointer;
+}
+
+.meme-button:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.meme-button_ring {
+  box-shadow: 12px 12px 24px var(--color-primary);
+}
+
+.meme-button_ring::after {
+  content: '';
+  width: 30px; height: 30px;
+  border-radius: 100%;
+  border: 6px solid var(--color-primary);
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: ring 1.5s infinite;
+}
+
+@keyframes ring {
+  0% {
+      width: 30px;
+      height: 30px;
+      opacity: 1;
+  }
+  100% {
+      width: 150px;
+      height: 150px;
+      opacity: 0;
+  }
+}
+
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 
 /* Document

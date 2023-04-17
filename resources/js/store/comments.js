@@ -40,14 +40,9 @@ const actions = {
     },
 }
 
-const getters = {
-
-}
-
 export default {
     namespaced: true,
     state: () => state,
     mutations,
     actions,
-    getters,
 }

@@ -28,14 +28,19 @@
             No matches found
         </p>
 
-        <add-comment-form />
+        <button 
+            type="button"
+            class="comments__open-button"
+            @click="openAddCommentModal"
+        >
+            Add comment +
+        </button>
     </ul>
 </template>
 
 <script>
-import AddCommentForm from './AddCommentForm.vue';
-
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
+import { MODAL_TYPES } from '../store/modals';
 
 export default {
     props: {
@@ -43,9 +48,6 @@ export default {
             type: Array,
             required: true,
         },
-    },
-    components: {
-        AddCommentForm,
     },
     computed: {
         formattedComments() {
@@ -68,7 +70,13 @@ export default {
         ...mapActions({
             deleteCommentById: 'comments/deleteCommentById',
         }),
-    }
+        ...mapMutations({
+            OPEN_MODAL: 'modals/OPEN_MODAL',
+        }),
+        openAddCommentModal() {
+            this.OPEN_MODAL(MODAL_TYPES.ADD_COMMENT_FORM);
+        },
+    },
 };
 </script>
 
